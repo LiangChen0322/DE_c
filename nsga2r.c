@@ -41,14 +41,12 @@ int main (int argc, char **argv)
     population *parent_pop;
     population *child_pop;
     population *mixed_pop;
-    if (argc<2)
-    {
+    if (argc<2) {
         printf("\n Usage ./nsga2r random_seed \n");
         exit(1);
     }
     seed = (double)atof(argv[1]);
-    if (seed<=0.0 || seed>=1.0)
-    {
+    if (seed<=0.0 || seed>=1.0) {
         printf("\n Entered seed value is wrong, seed value must be in (0,1) \n");
         exit(1);
     }
@@ -62,7 +60,9 @@ int main (int argc, char **argv)
     fprintf(fpt3,"# This file contains the data of final feasible population (if found)\n");
     fprintf(fpt4,"# This file contains the data of all generations\n");
     fprintf(fpt5,"# This file contains information about inputs as read by the program\n");
+    
     printf("\n Enter the problem relevant and algorithm relevant parameters ... ");
+    // 1, get population size
     printf("\n Enter the population size (a multiple of 4) : ");
     scanf("%d",&popsize);
     if (popsize<4 || (popsize%4)!= 0)
@@ -71,6 +71,7 @@ int main (int argc, char **argv)
         printf("\n Wrong population size entered, hence exiting \n");
         exit (1);
     }
+    // 2, get number of generation
     printf("\n Enter the number of generations : ");
     scanf("%d",&ngen);
     if (ngen<1)
@@ -79,74 +80,71 @@ int main (int argc, char **argv)
         printf("\n Wrong nuber of generations entered, hence exiting \n");
         exit (1);
     }
+    // 3, get number of objectives
     printf("\n Enter the number of objectives : ");
     scanf("%d",&nobj);
-    if (nobj<1)
-    {
+    if (nobj<1) {
         printf("\n number of objectives entered is : %d",nobj);
         printf("\n Wrong number of objectives entered, hence exiting \n");
         exit (1);
     }
+    // 4, get number of constraints
     printf("\n Enter the number of constraints : ");
     scanf("%d",&ncon);
-    if (ncon<0)
-    {
+    if (ncon<0) {
         printf("\n number of constraints entered is : %d",ncon);
         printf("\n Wrong number of constraints enetered, hence exiting \n");
         exit (1);
     }
+    // 5, get number of real variables
     printf("\n Enter the number of real variables : ");
     scanf("%d",&nreal);
-    if (nreal<0)
-    {
+    if (nreal<0) {
         printf("\n number of real variables entered is : %d",nreal);
         printf("\n Wrong number of variables entered, hence exiting \n");
         exit (1);
     }
-    if (nreal != 0)
-    {
+    if (nreal != 0) {
         min_realvar = (double *)malloc(nreal*sizeof(double));
         max_realvar = (double *)malloc(nreal*sizeof(double));
-        for (i=0; i<nreal; i++)
-        {
+        for (i=0; i<nreal; i++) {
             printf ("\n Enter the lower limit of real variable %d : ",i+1);
             scanf ("%lf",&min_realvar[i]);
             printf ("\n Enter the upper limit of real variable %d : ",i+1);
             scanf ("%lf",&max_realvar[i]);
-            if (max_realvar[i] <= min_realvar[i])
-            {
+            if (max_realvar[i] <= min_realvar[i]) {
                 printf("\n Wrong limits entered for the min and max bounds of real variable, hence exiting \n");
                 exit(1);
             }
         }
+        // get the probability of crossover of real variable
         printf ("\n Enter the probability of crossover of real variable (0.6-1.0) : ");
         scanf ("%lf",&pcross_real);
-        if (pcross_real<0.0 || pcross_real>1.0)
-        {
+        if (pcross_real<0.0 || pcross_real>1.0) {
             printf("\n Probability of crossover entered is : %e",pcross_real);
             printf("\n Entered value of probability of crossover of real variables is out of bounds, hence exiting \n");
             exit (1);
         }
+        // 
         printf ("\n Enter the probablity of mutation of real variables (1/nreal) : ");
         scanf ("%lf",&pmut_real);
-        if (pmut_real<0.0 || pmut_real>1.0)
-        {
+        if (pmut_real<0.0 || pmut_real>1.0) {
             printf("\n Probability of mutation entered is : %e",pmut_real);
             printf("\n Entered value of probability of mutation of real variables is out of bounds, hence exiting \n");
             exit (1);
         }
+        // the value of distribution index
         printf ("\n Enter the value of distribution index for crossover (5-20): ");
         scanf ("%lf",&eta_c);
-        if (eta_c<=0)
-        {
+        if (eta_c<=0) {
             printf("\n The value entered is : %e",eta_c);
             printf("\n Wrong value of distribution index for crossover entered, hence exiting \n");
             exit (1);
         }
+        // the value of distribution index for mutation
         printf ("\n Enter the value of distribution index for mutation (5-50): ");
         scanf ("%lf",&eta_m);
-        if (eta_m<=0)
-        {
+        if (eta_m<=0) {
             printf("\n The value entered is : %e",eta_m);
             printf("\n Wrong value of distribution index for mutation entered, hence exiting \n");
             exit (1);
@@ -154,19 +152,16 @@ int main (int argc, char **argv)
     }
     printf("\n Enter the number of binary variables : ");
     scanf("%d",&nbin);
-    if (nbin<0)
-    {
+    if (nbin<0) {
         printf ("\n number of binary variables entered is : %d",nbin);
         printf ("\n Wrong number of binary variables entered, hence exiting \n");
         exit(1);
     }
-    if (nbin != 0)
-    {
+    if (nbin != 0) {
         nbits = (int *)malloc(nbin*sizeof(int));
         min_binvar = (double *)malloc(nbin*sizeof(double));
         max_binvar = (double *)malloc(nbin*sizeof(double));
-        for (i=0; i<nbin; i++)
-        {
+        for (i=0; i<nbin; i++) {
             printf ("\n Enter the number of bits for binary variable %d : ",i+1);
             scanf ("%d",&nbits[i]);
             if (nbits[i] < 1)
@@ -186,8 +181,7 @@ int main (int argc, char **argv)
         }
         printf ("\n Enter the probability of crossover of binary variable (0.6-1.0): ");
         scanf ("%lf",&pcross_bin);
-        if (pcross_bin<0.0 || pcross_bin>1.0)
-        {
+        if (pcross_bin<0.0 || pcross_bin>1.0) {
             printf("\n Probability of crossover entered is : %e",pcross_bin);
             printf("\n Entered value of probability of crossover of binary variables is out of bounds, hence exiting \n");
             exit (1);
